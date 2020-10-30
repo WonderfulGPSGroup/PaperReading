@@ -74,4 +74,15 @@
   * 基本结构![image-20201030163323779](xtayex-DMM阅读笔记.assets/image-20201030163323779.png)
 
      通过一个基本的自动编码器实现基站的编码。After many iterations, the location information of cell towers as well as spatial proximity among cell towers are learned and represented in the weight matrix of the representation layer.
+  
+* Map matcher
 
+  * 结构：
+
+    ![image-20201031000027078](xtayex-DMM阅读笔记.assets/image-20201031000027078.png)
+
+  * Encoder-decoder
+
+    * Encoder
+      * 一个RNN
+    * Decoder
