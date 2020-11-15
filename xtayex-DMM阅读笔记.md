@@ -41,12 +41,37 @@
 
 * Towards this end：为了/旨在实现这个
 
+* $\odot$：哈达玛积，表示两个矩阵对应元素相乘
+  $$
+  \begin{bmatrix}
+  1 &2\\
+  3 &4
+  \end{bmatrix}
+  \odot
+  \begin{bmatrix}
+  3 &4\\
+  1 &2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  1\times3 &2\times4\\
+  3\times1 &4\times2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  3 &8\\
+  3 &8
+  \end{bmatrix}
+  $$
+  
+
 ### DMM
 
 #### Introduction
 
-* 输入：a sequence of cell tower locatoins
-
+* 输入：a sequence of cell tower locations
+* 输出：匹配到的路段
+* DMM这篇论文是讲怎么用深度学习的方法来做地图匹配，也就是输入一些蜂窝数据点，然后输出匹配到的路段（takes a sequence of cell tower locations as input and infers a trajectory composed of road segments）
 * encoder-decoder model：
 
   * 解决两个问题：
@@ -74,6 +99,12 @@
   * 基本结构![image-20201030163323779](xtayex-DMM阅读笔记.assets/image-20201030163323779.png)
 
      通过一个基本的自动编码器实现基站的编码。After many iterations, the location information of cell towers as well as spatial proximity among cell towers are learned and represented in the weight matrix of the representation layer.
+     
+     实际上这就是一个自编码器，但是，基础的自编码器并不能够反映空间邻近信息，因此，作者首先构建一个空间上邻近的基站集，实际上就是设置一个大小为2的窗口，对一个基站，只取前后窗口内的基站和当前基站分别构成两个基站对，然后将这两个基站对放到上面所说的基站集中（基站的序列是按什么规则排的还不是很清楚）。训练时，对于基站对$(A,B)$，$A$是输入，$B$是expected output，通过不断降低loss，来最大化预测出$B$的概率。那$Eq\ 1$到底是什么意思呢？实际上，因为预测出来的基站不一定就是窗口内的基站，所以对于基站$x$，在预测完这个点后，结果是他的窗口内的基站的概率总和并不一定是1！！。所以我们就要最大化预测出的基站在窗口内的概率，所以需要求和！！而这里的求和，是对$C_x$内的所有基站求和，$C_x$就是这个窗口！！！！
+     
+     ![image-20201112221328547](xtayex-DMM阅读笔记.assets/image-20201112221328547.png)
+     
+     看完这部分后豁然开朗！
   
 * Map matcher
 
@@ -83,6 +114,4 @@
 
   * Encoder-decoder
 
-    * Encoder
-      * 一个RNN
-    * Decoder
+    
